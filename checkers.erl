@@ -68,13 +68,15 @@ get_piece(Color, Type) ->
 
 % Returns next available moves for Player
 successors(Board, Player) ->
-  % Reduce the board to a list of indicies to check
-  Pieces = [ Idx || {Idx, {piece, P, _}} <- Board, P =:= Player],
+  % Find all moves from squares to empty squares
+  Moves = [ {move, Type, From, To} || 
+              {From, {piece, P, Type}} <- Board,  % Pull Player's pieces from the board
+              {To, empty} <- Board,               % Take To from all empty squares
+               P =:= Player,
+               lists:member(To, adjacent_squares(From))], % Ensure the empty square belong to the adj
+                                                          % squares of "From"
   
-  % Iterate through adjacent squares, returning moves
-  lists:map(fun(Piece) -> pieceMove(Piece, Board) end, Pieces).
+  % Remove invalid moves for regular pieces
+  lists:filter(fun({move, man, F, T}) -> case Player of black -> F < T; white -> F > T end end, Moves).
 
-pieceMove(From, Board) ->
-  % Doesn't yet consider jumps
-  % Take elements from Board where To belongs to the adjacent squares of from
-  [ {move, From, To} || {To, empty} <- Board, lists:member(To, adjacent_squares(From)) ].
+  % next, jumps need to be considered, so we'll concatenate those moves...
