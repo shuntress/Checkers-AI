@@ -24,7 +24,6 @@ public class Board {
 		for (int y = 5; y < 8; ++y)
 			for (int x = (y + 1) % 2; x < 8; x += 2)
 				spaces[x][y] = new Piece(Player.BLACK);
-		printState();
 	}
 	
 	//checks if space exists

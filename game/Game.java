@@ -51,8 +51,8 @@ public class Game {
 		
 		//game on
 		board.set();
-		board.pib(getState(true));
 		renderer.repaint();
+		prettyPrint();
 	}
 	
 	//interface between the game and the controller; all moves are carried out through here
@@ -82,7 +82,8 @@ public class Game {
 	}
 	
 	public static void endTurn() {
-		board.pib(getState(true));
+		prettyPrint();
+		//board.pib(getState(true));
 	
 		//switch to the other player's turn
 		turn = turn.other();
@@ -107,6 +108,23 @@ public class Game {
 			return board.compress(board.getBoard());
 		else
 			return board.getBoard();
+	}
+	
+	public static void prettyPrint()
+	{
+		int[][] small=getState(true), large=getState(false);
+		System.out.println("-------------------------");
+		for(int y=0;y<small[0].length;y++)
+		{
+		
+			for(int x=0;x<small.length;x++)
+				System.out.print(small[x][y]);
+			System.out.print("\t\t");
+			for(int x=0;x<large.length;x++)
+				System.out.print(large[x][y]);
+			System.out.println();
+		}
+		System.out.println("-------------------------\n");
 	}
 	
 	public static void printStateToFile(boolean compress) throws IOException
