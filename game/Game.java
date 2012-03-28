@@ -16,8 +16,11 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.util.Random;
 
+import java.io.*;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JButton;
 
 public class Game {
 	
@@ -97,6 +100,7 @@ public class Game {
 		start();
 	}
 	
+	/*BLUE=1 BLACK=2 BLUE KING=3 BLACK KING=4*/
 	public static int[][] getState(boolean compress)
 	{
 		if(compress)
@@ -105,9 +109,29 @@ public class Game {
 			return board.getBoard();
 	}
 	
+	public static void printStateToFile(boolean compress) throws IOException
+	{
+		BufferedWriter bw = new BufferedWriter(new FileWriter("state.txt"));
+		int[][] ra = getState(compress);
+		System.out.print("Overriding old state...\nSaving state: ");
+		for(int y=0;y<ra[0].length;y++)
+		{
+			for(int x=0;x<ra.length;x++)
+			{
+				System.out.print((char)(48+ra[x][y]));
+				bw.write((char)(48+ra[x][y]));
+			}
+		}
+		System.out.println();
+		bw.flush();
+		bw.close();
+	}
+	
 	//set up the game window
 	public static void main(String [] args) {
 		JFrame frame = new JFrame();
+		JButton butt = new JButton("Save state");
+		butt.addActionListener(new ButtonListener());
 		frame.setTitle("Let's Play Some Checkers");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
@@ -117,6 +141,7 @@ public class Game {
 		renderer.setSize(GRID_SIZE * 8, GRID_SIZE * 8);
 		frame.add(renderer);
 		renderer.addMouseListener(controller);
+		frame.add(butt);
 		frame.pack();
 		frame.setVisible(true);
 		

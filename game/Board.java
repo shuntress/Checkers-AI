@@ -208,13 +208,13 @@ public class Board {
 			for(int x=0;x<spaces[y].length;x++)
 			{	if(spaces[x][y]!=null)
 					if(spaces[x][y].owner==Player.BLACK)
-						t=1;
-					else
 						t=2;
+					else
+						t=1;
 				else
 					t=0;
 				out[x][y]=t;
-				if (spaces[x][y] != null && spaces[x][y].isKing) out[y][x]*=10;
+				if (spaces[x][y] != null && spaces[x][y].isKing) out[x][y]+=2;
 			}
 		}
 		return out;
